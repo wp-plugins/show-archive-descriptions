@@ -134,6 +134,7 @@ License: GPLv2 or later
 
 	// main function and action
 	// http://yoast.com/wordpress-archive-pages/
+	// http://docs.appthemes.com/tutorials/allow-html-in-taxonomy-descriptions/
   add_action('loop_start','satd_showarchivedescriptions');
   function satd_showarchivedescriptions() {
 		$options = satd_getpluginoptions();
@@ -160,8 +161,6 @@ License: GPLv2 or later
 					if (is_tag() && $showontags) {
 						$archivetype = __('tag', satd_get_local());
 					}
-					
-					
 
 					if ((is_category() && $showoncats) || (is_tag() && $showontags)) {
 						// check if anything is written in the category or tag description
