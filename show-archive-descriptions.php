@@ -3,7 +3,7 @@
 Plugin Name: Show Archive Descriptions
 Plugin URI: http://www.jimmyscode.com/wordpress/show-category-tag-descriptions/
 Description: Show category, tag and author descriptions on your archive pages.
-Version: 0.0.1
+Version: 0.0.2
 Author: Jimmy Pe&ntilde;a
 Author URI: http://www.jimmyscode.com/
 License: GPLv2 or later
@@ -11,7 +11,7 @@ License: GPLv2 or later
 
 	define('SATD_PLUGIN_NAME', 'Show Archive Descriptions');
 	// plugin constants
-	define('SATD_VERSION', '0.0.1');
+	define('SATD_VERSION', '0.0.2');
 	define('SATD_SLUG', 'show-archive-descriptions');
 	define('SATD_LOCAL', 'satd');
 	define('SATD_OPTION', 'satd');
@@ -20,11 +20,11 @@ License: GPLv2 or later
 	define('SATD_PATH', plugin_basename(dirname(__FILE__)));
 	/* default values */
 	define('SATD_DEFAULT_ENABLED', true);
-	define('SATD_DEFAULT_DISPLAY_ON_CATEGORY_PAGES', true);
-	define('SATD_DEFAULT_DISPLAY_ON_TAG_PAGES', true);
-	define('SATD_DEFAULT_DISPLAY_ON_AUTHOR_PAGES', true);
+	define('SATD_DEFAULT_DISPLAY_ON_CATEGORY_PAGES', false);
+	define('SATD_DEFAULT_DISPLAY_ON_TAG_PAGES', false);
+	define('SATD_DEFAULT_DISPLAY_ON_AUTHOR_PAGES', false);
 	define('SATD_DEFAULT_ALLOW_HTML', false);
-	define('SATD_DEFAULT_SHOW_GRAVATAR', true);
+	define('SATD_DEFAULT_SHOW_GRAVATAR', false);
 	define('SATD_DEFAULT_GRAVATAR_SIZE', 45);
 	/* option array member names */
 	define('SATD_DEFAULT_ENABLED_NAME', 'enabled');
