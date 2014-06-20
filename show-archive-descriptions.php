@@ -3,7 +3,7 @@
 Plugin Name: Show Archive Descriptions
 Plugin URI: http://www.jimmyscode.com/wordpress/show-category-tag-descriptions/
 Description: Show category, tag and author descriptions on your archive pages.
-Version: 0.0.3
+Version: 0.0.4
 Author: Jimmy Pe&ntilde;a
 Author URI: http://www.jimmyscode.com/
 License: GPLv2 or later
@@ -11,7 +11,7 @@ License: GPLv2 or later
 
 	define('SATD_PLUGIN_NAME', 'Show Archive Descriptions');
 	// plugin constants
-	define('SATD_VERSION', '0.0.3');
+	define('SATD_VERSION', '0.0.4');
 	define('SATD_SLUG', 'show-archive-descriptions');
 	define('SATD_LOCAL', 'satd');
 	define('SATD_OPTION', 'satd');
@@ -57,12 +57,14 @@ License: GPLv2 or later
 	// validation function
 	function satd_validation($input) {
 		// sanitize textarea
-		$input[SATD_DEFAULT_DISPLAY_ON_CATEGORY_PAGES_NAME] = (bool)$input[SATD_DEFAULT_DISPLAY_ON_CATEGORY_PAGES_NAME];
-		$input[SATD_DEFAULT_DISPLAY_ON_TAG_PAGES_NAME] = (bool)$input[SATD_DEFAULT_DISPLAY_ON_TAG_PAGES_NAME];
-		$input[SATD_DEFAULT_DISPLAY_ON_AUTHOR_PAGES_NAME] = (bool)$input[SATD_DEFAULT_DISPLAY_ON_AUTHOR_PAGES_NAME];
-		$input[SATD_DEFAULT_ALLOW_HTML_NAME] = (bool)$input[SATD_DEFAULT_ALLOW_HTML_NAME];
-		$input[SATD_DEFAULT_SHOW_GRAVATAR_NAME] = (bool)$input[SATD_DEFAULT_SHOW_GRAVATAR_NAME];
-		$input[SATD_DEFAULT_GRAVATAR_SIZE_NAME] = intval($input[SATD_DEFAULT_GRAVATAR_SIZE_NAME]);
+		if (!empty($input)) {
+			$input[SATD_DEFAULT_DISPLAY_ON_CATEGORY_PAGES_NAME] = (bool)$input[SATD_DEFAULT_DISPLAY_ON_CATEGORY_PAGES_NAME];
+			$input[SATD_DEFAULT_DISPLAY_ON_TAG_PAGES_NAME] = (bool)$input[SATD_DEFAULT_DISPLAY_ON_TAG_PAGES_NAME];
+			$input[SATD_DEFAULT_DISPLAY_ON_AUTHOR_PAGES_NAME] = (bool)$input[SATD_DEFAULT_DISPLAY_ON_AUTHOR_PAGES_NAME];
+			$input[SATD_DEFAULT_ALLOW_HTML_NAME] = (bool)$input[SATD_DEFAULT_ALLOW_HTML_NAME];
+			$input[SATD_DEFAULT_SHOW_GRAVATAR_NAME] = (bool)$input[SATD_DEFAULT_SHOW_GRAVATAR_NAME];
+			$input[SATD_DEFAULT_GRAVATAR_SIZE_NAME] = intval($input[SATD_DEFAULT_GRAVATAR_SIZE_NAME]);
+		}
 		return $input;
 	}
 	// add Settings sub-menu
@@ -83,7 +85,7 @@ License: GPLv2 or later
 			<div><?php _e('You are running plugin version', satd_get_local()); ?> <strong><?php echo SATD_VERSION; ?></strong>.</div>
 
 			<?php /* http://code.tutsplus.com/tutorials/the-complete-guide-to-the-wordpress-settings-api-part-5-tabbed-navigation-for-your-settings-page--wp-24971 */ ?>
-			<?php $active_tab = (isset($_GET['tab']) ? $_GET['tab'] : 'settings'); ?>
+			<?php $active_tab = (!empty($_GET['tab']) ? $_GET['tab'] : 'settings'); ?>
 			<h2 class="nav-tab-wrapper">
 			  <a href="?page=<?php echo satd_get_slug(); ?>&tab=settings" class="nav-tab <?php echo $active_tab == 'settings' ? 'nav-tab-active' : ''; ?>"><?php _e('Settings', satd_get_local()); ?></a>
 				<a href="?page=<?php echo satd_get_slug(); ?>&tab=support" class="nav-tab <?php echo $active_tab == 'support' ? 'nav-tab-active' : ''; ?>"><?php _e('Support', satd_get_local()); ?></a>
@@ -138,13 +140,26 @@ License: GPLv2 or later
   add_action('loop_start','satd_showarchivedescriptions');
   function satd_showarchivedescriptions() {
 		$options = satd_getpluginoptions();
-		$enabled = (bool)$options[SATD_DEFAULT_ENABLED_NAME];
-
+		if (!empty($options)) {
+			$enabled = (bool)$options[SATD_DEFAULT_ENABLED_NAME];
+		} else {
+			$enabled = SATD_DEFAULT_ENABLED;
+		}
+		
+		$output = '';
+		
 		if ($enabled) {
-			$showoncats = $options[SATD_DEFAULT_DISPLAY_ON_CATEGORY_PAGES_NAME];
-			$showontags = $options[SATD_DEFAULT_DISPLAY_ON_TAG_PAGES_NAME];
-			$showonauthors = $options[SATD_DEFAULT_DISPLAY_ON_AUTHOR_PAGES_NAME];
-			$allowhtml = $options[SATD_DEFAULT_ALLOW_HTML_NAME];
+			if (!empty($options)) {
+				$showoncats = $options[SATD_DEFAULT_DISPLAY_ON_CATEGORY_PAGES_NAME];
+				$showontags = $options[SATD_DEFAULT_DISPLAY_ON_TAG_PAGES_NAME];
+				$showonauthors = $options[SATD_DEFAULT_DISPLAY_ON_AUTHOR_PAGES_NAME];
+				$allowhtml = $options[SATD_DEFAULT_ALLOW_HTML_NAME];
+			} else {
+				$showoncats = satd_setupvar($showoncats, SATD_DEFAULT_DISPLAY_ON_CATEGORY_PAGES, SATD_DEFAULT_DISPLAY_ON_CATEGORY_PAGES_NAME, $options);
+				$showontags = satd_setupvar($showontags, SATD_DEFAULT_DISPLAY_ON_TAG_PAGES, SATD_DEFAULT_DISPLAY_ON_TAG_PAGES_NAME, $options);
+				$showonauthors = satd_setupvar($showonauthors, SATD_DEFAULT_DISPLAY_ON_AUTHOR_PAGES, SATD_DEFAULT_DISPLAY_ON_AUTHOR_PAGES_NAME, $options);
+				$allowhtml = satd_setupvar($allowhtml, SATD_DEFAULT_ALLOW_HTML, SATD_DEFAULT_ALLOW_HTML_NAME, $options);
+			}
 
 			if (is_archive()) { // we are on a Category, Tag, Author or Date archive page
 				if (!get_query_var('paged')) { // we are on the first page of a possibly paged list
@@ -216,12 +231,14 @@ License: GPLv2 or later
 		global $pagenow;
 		if (current_user_can(SATD_PERMISSIONS_LEVEL)) { // user has privilege
 			if ($pagenow == 'options-general.php') { // we are on Settings menu
-				if ($_GET['page'] == satd_get_slug()) { // we are on this plugin's settings page
-					$options = satd_getpluginoptions();
-					if ($options != false) {
-						$enabled = (bool)$options[SATD_DEFAULT_ENABLED_NAME];
-						if (!$enabled) {
-							echo '<div id="message" class="error">' . SATD_PLUGIN_NAME . ' ' . __('is currently disabled.', satd_get_local()) . '</div>';
+				if (!empty($_GET['page'])) {
+					if ($_GET['page'] == satd_get_slug()) { // we are on this plugin's settings page
+						$options = satd_getpluginoptions();
+						if (!empty($options)) {
+							$enabled = (bool)$options[SATD_DEFAULT_ENABLED_NAME];
+							if (!$enabled) {
+								echo '<div id="message" class="error">' . SATD_PLUGIN_NAME . ' ' . __('is currently disabled.', satd_get_local()) . '</div>';
+							}
 						}
 					}
 				}
@@ -234,8 +251,10 @@ License: GPLv2 or later
 		global $pagenow;
 		if (current_user_can(SATD_PERMISSIONS_LEVEL)) { // user has privilege
 			if ($pagenow == 'options-general.php') { // we are on Settings menu
-				if ($_GET['page'] == satd_get_slug()) { // we are on this plugin's settings page
-					satd_admin_styles();
+				if (!empty($_GET['page'])) {
+					if ($_GET['page'] == satd_get_slug()) { // we are on this plugin's settings page
+						satd_admin_styles();
+					}
 				}
 			}
 		}
@@ -320,6 +339,15 @@ License: GPLv2 or later
 		$settings_link = sprintf( __('<a href="options-general.php?page=%s">Settings</a>', $localname), $slugname);
 		array_unshift($linklist, $settings_link);
 		return $linklist;
+	}
+	function satd_setupvar($var, $defaultvalue, $defaultvarname, $optionsarr) {
+		if ($var == $defaultvalue) {
+			$var = $optionsarr[$defaultvarname];
+			if (!$var) {
+				$var = $defaultvalue;
+			}
+		}
+		return $var;
 	}
 	function satd_getsupportinfo($slugname = '', $localname = '') {
 		$output = __('Do you need help with this plugin? Check out the following resources:', $localname);

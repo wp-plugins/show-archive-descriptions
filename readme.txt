@@ -1,4 +1,4 @@
-=== Show Archive Descriptions ===
+
 Tags: author, category, tag, description, show
 Requires at least: 3.5
 Tested up to: 3.9
@@ -53,6 +53,9 @@ Add this to your functions.php:
 
 == Changelog ==
 
+= 0.0.4 =
+- code fix
+
 = 0.0.3 =
 - updated support tab
 
@@ -63,6 +66,9 @@ Add this to your functions.php:
 - created
 
 == Upgrade Notice ==
+
+= 0.0.4 =
+- code fix
 
 = 0.0.3 =
 - updated support tab
