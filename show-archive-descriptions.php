@@ -3,7 +3,7 @@
 Plugin Name: Show Archive Descriptions
 Plugin URI: http://www.jimmyscode.com/wordpress/show-category-tag-descriptions/
 Description: Show category, tag and author descriptions on your archive pages.
-Version: 0.0.4
+Version: 0.0.5
 Author: Jimmy Pe&ntilde;a
 Author URI: http://www.jimmyscode.com/
 License: GPLv2 or later
@@ -11,7 +11,7 @@ License: GPLv2 or later
 
 	define('SATD_PLUGIN_NAME', 'Show Archive Descriptions');
 	// plugin constants
-	define('SATD_VERSION', '0.0.4');
+	define('SATD_VERSION', '0.0.5');
 	define('SATD_SLUG', 'show-archive-descriptions');
 	define('SATD_LOCAL', 'satd');
 	define('SATD_OPTION', 'satd');
@@ -26,6 +26,7 @@ License: GPLv2 or later
 	define('SATD_DEFAULT_ALLOW_HTML', false);
 	define('SATD_DEFAULT_SHOW_GRAVATAR', false);
 	define('SATD_DEFAULT_GRAVATAR_SIZE', 45);
+	define('SATD_CUSTOM_HEADING', '');
 	/* option array member names */
 	define('SATD_DEFAULT_ENABLED_NAME', 'enabled');
 	define('SATD_DEFAULT_DISPLAY_ON_CATEGORY_PAGES_NAME', 'showcategorypages');
@@ -34,6 +35,7 @@ License: GPLv2 or later
 	define('SATD_DEFAULT_ALLOW_HTML_NAME', 'allowhtml');
 	define('SATD_DEFAULT_SHOW_GRAVATAR_NAME', 'showgravatar');
 	define('SATD_DEFAULT_GRAVATAR_SIZE_NAME', 'gravatarsize');
+	define('SATD_CUSTOM_HEADING_NAME', 'customheading');
 	
 	// oh no you don't
 	if (!defined('ABSPATH')) {
@@ -56,14 +58,16 @@ License: GPLv2 or later
 	}
 	// validation function
 	function satd_validation($input) {
-		// sanitize textarea
 		if (!empty($input)) {
+			// validate all form fields
+			$input[SATD_DEFAULT_ENABLED_NAME] = (bool)$input[SATD_DEFAULT_ENABLED_NAME];
 			$input[SATD_DEFAULT_DISPLAY_ON_CATEGORY_PAGES_NAME] = (bool)$input[SATD_DEFAULT_DISPLAY_ON_CATEGORY_PAGES_NAME];
 			$input[SATD_DEFAULT_DISPLAY_ON_TAG_PAGES_NAME] = (bool)$input[SATD_DEFAULT_DISPLAY_ON_TAG_PAGES_NAME];
 			$input[SATD_DEFAULT_DISPLAY_ON_AUTHOR_PAGES_NAME] = (bool)$input[SATD_DEFAULT_DISPLAY_ON_AUTHOR_PAGES_NAME];
 			$input[SATD_DEFAULT_ALLOW_HTML_NAME] = (bool)$input[SATD_DEFAULT_ALLOW_HTML_NAME];
 			$input[SATD_DEFAULT_SHOW_GRAVATAR_NAME] = (bool)$input[SATD_DEFAULT_SHOW_GRAVATAR_NAME];
 			$input[SATD_DEFAULT_GRAVATAR_SIZE_NAME] = intval($input[SATD_DEFAULT_GRAVATAR_SIZE_NAME]);
+			$input[SATD_CUSTOM_HEADING_NAME] = sanitize_text_field($input[SATD_CUSTOM_HEADING_NAME]);
 		}
 		return $input;
 	}
@@ -99,29 +103,39 @@ License: GPLv2 or later
 			<h3 id="settings"><img src="<?php echo plugins_url(satd_get_path() . '/images/settings.png'); ?>" title="" alt="" height="61" width="64" align="absmiddle" /> <?php _e('Plugin Settings', satd_get_local()); ?></h3>
 				<table class="form-table" id="theme-options-wrap">
 					<tr valign="top"><th scope="row"><strong><label title="<?php _e('Is plugin enabled? Uncheck this to turn it off temporarily.', satd_get_local()); ?>" for="<?php echo satd_get_option(); ?>[<?php echo SATD_DEFAULT_ENABLED_NAME; ?>]"><?php _e('Plugin enabled?', satd_get_local()); ?></label></strong></th>
-						<td><input type="checkbox" id="<?php echo satd_get_option(); ?>[<?php echo SATD_DEFAULT_ENABLED_NAME; ?>]" name="<?php echo satd_get_option(); ?>[<?php echo SATD_DEFAULT_ENABLED_NAME; ?>]" value="1" <?php checked('1', $options[SATD_DEFAULT_ENABLED_NAME]); ?> /></td>
+						<td><input type="checkbox" id="<?php echo satd_get_option(); ?>[<?php echo SATD_DEFAULT_ENABLED_NAME; ?>]" name="<?php echo satd_get_option(); ?>[<?php echo SATD_DEFAULT_ENABLED_NAME; ?>]" value="1" <?php checked('1', satd_checkifset(SATD_DEFAULT_ENABLED_NAME, SATD_DEFAULT_ENABLED, $options)); ?> /></td>
 					</tr>
-					<tr valign="top"><td colspan="2"><?php _e('Is plugin enabled? Uncheck this to turn it off temporarily.', satd_get_local()); ?></td></tr>
+					<?php satd_explanationrow(__('Is plugin enabled? Uncheck this to turn it off temporarily.', satd_get_local())); ?>
+					<?php satd_getlinebreak(); ?>
 					<tr valign="top"><th scope="row"><strong><label title="<?php _e('Where do you want to show archive descriptions', satd_get_local()); ?>"><?php _e('Where do you want to show archive descriptions', satd_get_local()); ?></label></strong></th>
 						<td>
-						<input type="checkbox" id="<?php echo satd_get_option(); ?>[<?php echo SATD_DEFAULT_DISPLAY_ON_CATEGORY_PAGES_NAME; ?>]" name="<?php echo satd_get_option(); ?>[<?php echo SATD_DEFAULT_DISPLAY_ON_CATEGORY_PAGES_NAME; ?>]" value="1" <?php checked('1', $options[SATD_DEFAULT_DISPLAY_ON_CATEGORY_PAGES_NAME]); ?> /> <?php _e('Category Pages', satd_get_local()); ?>
-						<input type="checkbox" id="<?php echo satd_get_option(); ?>[<?php echo SATD_DEFAULT_DISPLAY_ON_TAG_PAGES_NAME; ?>]" name="<?php echo satd_get_option(); ?>[<?php echo SATD_DEFAULT_DISPLAY_ON_TAG_PAGES_NAME; ?>]" value="1" <?php checked('1', $options[SATD_DEFAULT_DISPLAY_ON_TAG_PAGES_NAME]); ?> /> <?php _e('Tag Pages', satd_get_local()); ?>
-						<input type="checkbox" id="<?php echo satd_get_option(); ?>[<?php echo SATD_DEFAULT_DISPLAY_ON_AUTHOR_PAGES_NAME; ?>]" name="<?php echo satd_get_option(); ?>[<?php echo SATD_DEFAULT_DISPLAY_ON_AUTHOR_PAGES_NAME; ?>]" value="1" <?php checked('1', $options[SATD_DEFAULT_DISPLAY_ON_AUTHOR_PAGES_NAME]); ?> /> <?php _e('Author Pages', satd_get_local()); ?>
+						<input type="checkbox" id="<?php echo satd_get_option(); ?>[<?php echo SATD_DEFAULT_DISPLAY_ON_CATEGORY_PAGES_NAME; ?>]" name="<?php echo satd_get_option(); ?>[<?php echo SATD_DEFAULT_DISPLAY_ON_CATEGORY_PAGES_NAME; ?>]" value="1" <?php checked('1', satd_checkifset(SATD_DEFAULT_DISPLAY_ON_CATEGORY_PAGES_NAME, SATD_DEFAULT_DISPLAY_ON_CATEGORY_PAGES, $options)); ?> /> <?php _e('Category Pages', satd_get_local()); ?>
+						<input type="checkbox" id="<?php echo satd_get_option(); ?>[<?php echo SATD_DEFAULT_DISPLAY_ON_TAG_PAGES_NAME; ?>]" name="<?php echo satd_get_option(); ?>[<?php echo SATD_DEFAULT_DISPLAY_ON_TAG_PAGES_NAME; ?>]" value="1" <?php checked('1', satd_checkifset(SATD_DEFAULT_DISPLAY_ON_TAG_PAGES_NAME, SATD_DEFAULT_DISPLAY_ON_TAG_PAGES, $options)); ?> /> <?php _e('Tag Pages', satd_get_local()); ?>
+						<input type="checkbox" id="<?php echo satd_get_option(); ?>[<?php echo SATD_DEFAULT_DISPLAY_ON_AUTHOR_PAGES_NAME; ?>]" name="<?php echo satd_get_option(); ?>[<?php echo SATD_DEFAULT_DISPLAY_ON_AUTHOR_PAGES_NAME; ?>]" value="1" <?php checked('1', satd_checkifset(SATD_DEFAULT_DISPLAY_ON_AUTHOR_PAGES_NAME, SATD_DEFAULT_DISPLAY_ON_AUTHOR_PAGES, $options)); ?> /> <?php _e('Author Pages', satd_get_local()); ?>
 						</td>
 						</tr>
-					<tr valign="top"><td colspan="2"><?php _e('Where to display archive description -- on Category pages, Tag pages, Author pages?', satd_get_local()); ?></td></tr>
+					<?php satd_explanationrow(__('Where to display archive description -- on Category pages, Tag pages, Author pages?', satd_get_local())); ?>
+					<?php satd_getlinebreak(); ?>
 					<tr valign="top"><th scope="row"><strong><label title="<?php _e('Allow HTML in archive description?', satd_get_local()); ?>" for="<?php echo satd_get_option(); ?>[<?php echo SATD_DEFAULT_ALLOW_HTML_NAME; ?>]"><?php _e('Allow HTML in archive description?', satd_get_local()); ?></label></strong></th>
-						<td><input type="checkbox" id="<?php echo satd_get_option(); ?>[<?php echo SATD_DEFAULT_ALLOW_HTML_NAME; ?>]" name="<?php echo satd_get_option(); ?>[<?php echo SATD_DEFAULT_ALLOW_HTML_NAME; ?>]" value="1" <?php checked('1', $options[SATD_DEFAULT_ALLOW_HTML_NAME]); ?> /></td>
+						<td><input type="checkbox" id="<?php echo satd_get_option(); ?>[<?php echo SATD_DEFAULT_ALLOW_HTML_NAME; ?>]" name="<?php echo satd_get_option(); ?>[<?php echo SATD_DEFAULT_ALLOW_HTML_NAME; ?>]" value="1" <?php checked('1', satd_checkifset(SATD_DEFAULT_ALLOW_HTML_NAME, SATD_DEFAULT_ALLOW_HTML, $options)); ?> /></td>
 					</tr>
-					<tr valign="top"><td colspan="2"><?php _e('Check this box to allow HTML in the archive descriptions. Normally it is not allowed.', satd_get_local()); ?></td></tr>
+					<?php satd_explanationrow(__('Check this box to allow HTML in the archive descriptions. Normally it is not allowed.', satd_get_local())); ?>
+					<?php satd_getlinebreak(); ?>
+					
+					<tr valign="top"><th scope="row"><strong><label title="<?php _e('Enter custom title', satd_get_local()); ?>" for="<?php echo satd_get_option(); ?>[<?php echo SATD_CUSTOM_HEADING_NAME; ?>]"><?php _e('Enter custom title', satd_get_local()); ?></label></strong></th>
+						<td><input type="text" id="<?php echo satd_get_option(); ?>[<?php echo SATD_CUSTOM_HEADING_NAME; ?>]" name="<?php echo satd_get_option(); ?>[<?php echo SATD_CUSTOM_HEADING_NAME; ?>]" value="<?php echo satd_checkifset(SATD_CUSTOM_HEADING_NAME, SATD_CUSTOM_HEADING, $options); ?>" /></td>
+					</tr>
+					<?php satd_explanationrow(__('Enter a custom title you want displayed before the archive description.', satd_get_local())); ?>
+					<?php satd_getlinebreak(); ?>					
 					<tr valign="top"><th scope="row"><strong><label title="<?php _e('Show gravatar with author description?', satd_get_local()); ?>" for="<?php echo satd_get_option(); ?>[<?php echo SATD_DEFAULT_SHOW_GRAVATAR_NAME; ?>]"><?php _e('Show gravatar with author description?', satd_get_local()); ?></label></strong></th>
-						<td><input type="checkbox" id="<?php echo satd_get_option(); ?>[<?php echo SATD_DEFAULT_SHOW_GRAVATAR_NAME; ?>]" name="<?php echo satd_get_option(); ?>[<?php echo SATD_DEFAULT_SHOW_GRAVATAR_NAME; ?>]" value="1" <?php checked('1', $options[SATD_DEFAULT_SHOW_GRAVATAR_NAME]); ?> /></td>
+						<td><input type="checkbox" id="<?php echo satd_get_option(); ?>[<?php echo SATD_DEFAULT_SHOW_GRAVATAR_NAME; ?>]" name="<?php echo satd_get_option(); ?>[<?php echo SATD_DEFAULT_SHOW_GRAVATAR_NAME; ?>]" value="1" <?php checked('1', satd_checkifset(SATD_DEFAULT_SHOW_GRAVATAR_NAME, SATD_DEFAULT_SHOW_GRAVATAR, $options)); ?> /></td>
 					</tr>
-					<tr valign="top"><td colspan="2"><?php _e('Show author\'s gravatar with author description?', satd_get_local()); ?></td></tr>
+					<?php satd_explanationrow(__('Show author\'s gravatar with author description?', satd_get_local())); ?>
+					<?php satd_getlinebreak(); ?>
 					<tr valign="top"><th scope="row"><strong><label title="<?php _e('Gravatar size', satd_get_local()); ?>" for="<?php echo satd_get_option(); ?>[<?php echo SATD_DEFAULT_GRAVATAR_SIZE_NAME; ?>]"><?php _e('Gravatar size', satd_get_local()); ?></label></strong></th>
-						<td><input type="number" size="20" min="16" max="512" step="1" id="<?php echo satd_get_option(); ?>[<?php echo SATD_DEFAULT_GRAVATAR_SIZE_NAME; ?>]" name="<?php echo satd_get_option(); ?>[<?php echo SATD_DEFAULT_GRAVATAR_SIZE_NAME; ?>]" value="<?php echo $options[SATD_DEFAULT_GRAVATAR_SIZE_NAME]; ?>" /></td>
+						<td><input type="number" size="20" min="16" max="512" step="1" id="<?php echo satd_get_option(); ?>[<?php echo SATD_DEFAULT_GRAVATAR_SIZE_NAME; ?>]" name="<?php echo satd_get_option(); ?>[<?php echo SATD_DEFAULT_GRAVATAR_SIZE_NAME; ?>]" value="<?php echo satd_checkifset(SATD_DEFAULT_GRAVATAR_SIZE_NAME, SATD_DEFAULT_GRAVATAR_SIZE, $options); ?>" /></td>
 					</tr>
-					<tr valign="top"><td colspan="2"><?php _e('Gravatar size (in pixels), max 512', satd_get_local()); ?></td></tr>					
+					<?php satd_explanationrow(__('Gravatar size (in pixels), max 512', satd_get_local())); ?>
 				</table>
 				<?php submit_button(); ?>
 			<?php } else { ?>
@@ -154,11 +168,13 @@ License: GPLv2 or later
 				$showontags = $options[SATD_DEFAULT_DISPLAY_ON_TAG_PAGES_NAME];
 				$showonauthors = $options[SATD_DEFAULT_DISPLAY_ON_AUTHOR_PAGES_NAME];
 				$allowhtml = $options[SATD_DEFAULT_ALLOW_HTML_NAME];
+				$customtitle = $options[SATD_CUSTOM_HEADING_NAME];
 			} else {
 				$showoncats = satd_setupvar($showoncats, SATD_DEFAULT_DISPLAY_ON_CATEGORY_PAGES, SATD_DEFAULT_DISPLAY_ON_CATEGORY_PAGES_NAME, $options);
 				$showontags = satd_setupvar($showontags, SATD_DEFAULT_DISPLAY_ON_TAG_PAGES, SATD_DEFAULT_DISPLAY_ON_TAG_PAGES_NAME, $options);
 				$showonauthors = satd_setupvar($showonauthors, SATD_DEFAULT_DISPLAY_ON_AUTHOR_PAGES, SATD_DEFAULT_DISPLAY_ON_AUTHOR_PAGES_NAME, $options);
 				$allowhtml = satd_setupvar($allowhtml, SATD_DEFAULT_ALLOW_HTML, SATD_DEFAULT_ALLOW_HTML_NAME, $options);
+				$customtitle = satd_setupvar($customtitle, SATD_CUSTOM_HEADING, SATD_CUSTOM_HEADING_NAME, $options);
 			}
 
 			if (is_archive()) { // we are on a Category, Tag, Author or Date archive page
@@ -186,7 +202,11 @@ License: GPLv2 or later
 
 							$output = '<div class="satd-archive-description">';
 							$output .= '<h2 class="satd-archive-title">';
-							$output .= __('This is the ', satd_get_local()) . ucwords(single_term_title('', false)) . ' ' . $archivetype . '.';
+							if ($customtitle) {
+								$output .= sanitize_text_field($customtitle);
+							} else {
+								$output .= __('This is the ', satd_get_local()) . ucwords(single_term_title('', false)) . ' ' . $archivetype . '.';
+							}
 							$output .= '</h2>';
 							$output .= '<div class="satd-arch-content">' . wpautop($termdesc) . '</div>';
 							$output .= '</div>';
@@ -325,7 +345,8 @@ License: GPLv2 or later
 				SATD_DEFAULT_DISPLAY_ON_AUTHOR_PAGES_NAME => SATD_DEFAULT_DISPLAY_ON_AUTHOR_PAGES, 
 				SATD_DEFAULT_ALLOW_HTML_NAME => SATD_DEFAULT_ALLOW_HTML, 
 				SATD_DEFAULT_SHOW_GRAVATAR_NAME => SATD_DEFAULT_SHOW_GRAVATAR, 
-				SATD_DEFAULT_GRAVATAR_SIZE_NAME => SATD_DEFAULT_GRAVATAR_SIZE
+				SATD_DEFAULT_GRAVATAR_SIZE_NAME => SATD_DEFAULT_GRAVATAR_SIZE,
+				SATD_CUSTOM_HEADING_NAME => SATD_CUSTOM_HEADING
 				));
 	}
 	
@@ -367,5 +388,14 @@ License: GPLv2 or later
 		$output .= '<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=7EX9NB9TLFHVW"><img src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" alt="Donate with PayPal" title="Support this plugin" width="92" height="26" /></a>';
 		$output .= '<br /><br />';
 		return $output;
+	}
+	function satd_checkifset($optionname, $optiondefault, $optionsarr) {
+		return (!empty($optionsarr[$optionname]) ? $optionsarr[$optionname] : $optiondefault);
+	}
+	function satd_getlinebreak() {
+	  echo '<tr valign="top"><td colspan="2"></td></tr>';
+	}
+	function satd_explanationrow($msg = '') {
+		echo '<tr valign="top"><td></td><td><em>' . $msg . '</em></td></tr>';
 	}
 ?>

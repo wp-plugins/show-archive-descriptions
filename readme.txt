@@ -53,6 +53,11 @@ Add this to your functions.php:
 
 == Changelog ==
 
+= 0.0.5 =
+- permanent fix for Undefined Index issue
+- admin CSS and page updates
+- you can now enter custom title for archive description
+
 = 0.0.4 =
 - code fix
 
@@ -66,6 +71,9 @@ Add this to your functions.php:
 - created
 
 == Upgrade Notice ==
+
+= 0.0.5 =
+- permanent fix for Undefined Index issue; admin CSS and page updates; you can now enter custom title for archive description
 
 = 0.0.4 =
 - code fix
