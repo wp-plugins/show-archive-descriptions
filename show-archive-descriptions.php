@@ -8,7 +8,7 @@ Author: Jimmy Pe&ntilde;a
 Author URI: http://www.jimmyscode.com/
 License: GPLv2 or later
 */
-
+if (!defined('SATD_PLUGIN_NAME')) {
 	define('SATD_PLUGIN_NAME', 'Show Archive Descriptions');
 	// plugin constants
 	define('SATD_VERSION', '0.0.5');
@@ -36,7 +36,7 @@ License: GPLv2 or later
 	define('SATD_DEFAULT_SHOW_GRAVATAR_NAME', 'showgravatar');
 	define('SATD_DEFAULT_GRAVATAR_SIZE_NAME', 'gravatarsize');
 	define('SATD_CUSTOM_HEADING_NAME', 'customheading');
-	
+}
 	// oh no you don't
 	if (!defined('ABSPATH')) {
 		wp_die(__('Do not access this file directly.', satd_get_local()));
@@ -85,7 +85,7 @@ License: GPLv2 or later
 		}
 		?>
 		<div class="wrap">
-			<h2 id="plugintitle"><img src="<?php echo plugins_url(satd_get_path() . '/images/description.png'); ?>" title="" alt="" height="64" width="64" align="absmiddle" /> <?php echo SATD_PLUGIN_NAME; _e(' by ', satd_get_local()); ?><a href="http://www.jimmyscode.com/">Jimmy Pe&ntilde;a</a></h2>
+			<h2 id="plugintitle"><img src="<?php echo satd_getimagefilename('description.png'); ?>" title="" alt="" height="64" width="64" align="absmiddle" /> <?php echo SATD_PLUGIN_NAME; _e(' by ', satd_get_local()); ?><a href="http://www.jimmyscode.com/">Jimmy Pe&ntilde;a</a></h2>
 			<div><?php _e('You are running plugin version', satd_get_local()); ?> <strong><?php echo SATD_VERSION; ?></strong>.</div>
 
 			<?php /* http://code.tutsplus.com/tutorials/the-complete-guide-to-the-wordpress-settings-api-part-5-tabbed-navigation-for-your-settings-page--wp-24971 */ ?>
@@ -100,7 +100,7 @@ License: GPLv2 or later
 			<?php $options = satd_getpluginoptions(); ?>
 			<?php update_option(satd_get_option(), $options); ?>
 			<?php if ($active_tab == 'settings') { ?>
-			<h3 id="settings"><img src="<?php echo plugins_url(satd_get_path() . '/images/settings.png'); ?>" title="" alt="" height="61" width="64" align="absmiddle" /> <?php _e('Plugin Settings', satd_get_local()); ?></h3>
+			<h3 id="settings"><img src="<?php echo satd_getimagefilename('settings.png'); ?>" title="" alt="" height="61" width="64" align="absmiddle" /> <?php _e('Plugin Settings', satd_get_local()); ?></h3>
 				<table class="form-table" id="theme-options-wrap">
 					<tr valign="top"><th scope="row"><strong><label title="<?php _e('Is plugin enabled? Uncheck this to turn it off temporarily.', satd_get_local()); ?>" for="<?php echo satd_get_option(); ?>[<?php echo SATD_DEFAULT_ENABLED_NAME; ?>]"><?php _e('Plugin enabled?', satd_get_local()); ?></label></strong></th>
 						<td><input type="checkbox" id="<?php echo satd_get_option(); ?>[<?php echo SATD_DEFAULT_ENABLED_NAME; ?>]" name="<?php echo satd_get_option(); ?>[<?php echo SATD_DEFAULT_ENABLED_NAME; ?>]" value="1" <?php checked('1', satd_checkifset(SATD_DEFAULT_ENABLED_NAME, SATD_DEFAULT_ENABLED, $options)); ?> /></td>
@@ -139,7 +139,7 @@ License: GPLv2 or later
 				</table>
 				<?php submit_button(); ?>
 			<?php } else { ?>
-			<h3 id="support"><img src="<?php echo plugins_url(satd_get_path() . '/images/support.png'); ?>" title="" alt="" height="64" width="64" align="absmiddle" /> <?php _e('Support', satd_get_local()); ?></h3>
+			<h3 id="support"><img src="<?php echo satd_getimagefilename('support.png'); ?>" title="" alt="" height="64" width="64" align="absmiddle" /> <?php _e('Support', satd_get_local()); ?></h3>
 				<div class="support">
 				<?php echo satd_getsupportinfo(satd_get_slug(), satd_get_local()); ?>
 				</div>
@@ -390,12 +390,15 @@ License: GPLv2 or later
 		return $output;
 	}
 	function satd_checkifset($optionname, $optiondefault, $optionsarr) {
-		return (!empty($optionsarr[$optionname]) ? $optionsarr[$optionname] : $optiondefault);
+		return (isset($optionsarr[$optionname]) ? $optionsarr[$optionname] : $optiondefault);
 	}
 	function satd_getlinebreak() {
 	  echo '<tr valign="top"><td colspan="2"></td></tr>';
 	}
 	function satd_explanationrow($msg = '') {
 		echo '<tr valign="top"><td></td><td><em>' . $msg . '</em></td></tr>';
+	}
+	function satd_getimagefilename($fname = '') {
+		return plugins_url(satd_get_path() . '/images/' . $fname);
 	}
 ?>
