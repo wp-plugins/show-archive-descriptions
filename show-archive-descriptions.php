@@ -3,7 +3,7 @@
 Plugin Name: Show Archive Descriptions
 Plugin URI: http://www.jimmyscode.com/wordpress/show-category-tag-descriptions/
 Description: Show category, tag and author descriptions on your archive pages.
-Version: 0.0.5
+Version: 0.0.6
 Author: Jimmy Pe&ntilde;a
 Author URI: http://www.jimmyscode.com/
 License: GPLv2 or later
@@ -11,7 +11,7 @@ License: GPLv2 or later
 if (!defined('SATD_PLUGIN_NAME')) {
 	define('SATD_PLUGIN_NAME', 'Show Archive Descriptions');
 	// plugin constants
-	define('SATD_VERSION', '0.0.5');
+	define('SATD_VERSION', '0.0.6');
 	define('SATD_SLUG', 'show-archive-descriptions');
 	define('SATD_LOCAL', 'satd');
 	define('SATD_OPTION', 'satd');
@@ -23,19 +23,17 @@ if (!defined('SATD_PLUGIN_NAME')) {
 	define('SATD_DEFAULT_DISPLAY_ON_CATEGORY_PAGES', false);
 	define('SATD_DEFAULT_DISPLAY_ON_TAG_PAGES', false);
 	define('SATD_DEFAULT_DISPLAY_ON_AUTHOR_PAGES', false);
-	define('SATD_DEFAULT_ALLOW_HTML', false);
 	define('SATD_DEFAULT_SHOW_GRAVATAR', false);
 	define('SATD_DEFAULT_GRAVATAR_SIZE', 45);
-	define('SATD_CUSTOM_HEADING', '');
+	define('SATD_CUSTOM_TITLE', '');
 	/* option array member names */
 	define('SATD_DEFAULT_ENABLED_NAME', 'enabled');
 	define('SATD_DEFAULT_DISPLAY_ON_CATEGORY_PAGES_NAME', 'showcategorypages');
 	define('SATD_DEFAULT_DISPLAY_ON_TAG_PAGES_NAME', 'showtagpages');
 	define('SATD_DEFAULT_DISPLAY_ON_AUTHOR_PAGES_NAME', 'showauthorpages');
-	define('SATD_DEFAULT_ALLOW_HTML_NAME', 'allowhtml');
 	define('SATD_DEFAULT_SHOW_GRAVATAR_NAME', 'showgravatar');
 	define('SATD_DEFAULT_GRAVATAR_SIZE_NAME', 'gravatarsize');
-	define('SATD_CUSTOM_HEADING_NAME', 'customheading');
+	define('SATD_CUSTOM_TITLE_NAME', 'customtitle');
 }
 	// oh no you don't
 	if (!defined('ABSPATH')) {
@@ -64,10 +62,9 @@ if (!defined('SATD_PLUGIN_NAME')) {
 			$input[SATD_DEFAULT_DISPLAY_ON_CATEGORY_PAGES_NAME] = (bool)$input[SATD_DEFAULT_DISPLAY_ON_CATEGORY_PAGES_NAME];
 			$input[SATD_DEFAULT_DISPLAY_ON_TAG_PAGES_NAME] = (bool)$input[SATD_DEFAULT_DISPLAY_ON_TAG_PAGES_NAME];
 			$input[SATD_DEFAULT_DISPLAY_ON_AUTHOR_PAGES_NAME] = (bool)$input[SATD_DEFAULT_DISPLAY_ON_AUTHOR_PAGES_NAME];
-			$input[SATD_DEFAULT_ALLOW_HTML_NAME] = (bool)$input[SATD_DEFAULT_ALLOW_HTML_NAME];
 			$input[SATD_DEFAULT_SHOW_GRAVATAR_NAME] = (bool)$input[SATD_DEFAULT_SHOW_GRAVATAR_NAME];
 			$input[SATD_DEFAULT_GRAVATAR_SIZE_NAME] = intval($input[SATD_DEFAULT_GRAVATAR_SIZE_NAME]);
-			$input[SATD_CUSTOM_HEADING_NAME] = sanitize_text_field($input[SATD_CUSTOM_HEADING_NAME]);
+			$input[SATD_CUSTOM_TITLE_NAME] = wp_kses_post(force_balance_tags($input[SATD_CUSTOM_TITLE_NAME]));
 		}
 		return $input;
 	}
@@ -89,7 +86,7 @@ if (!defined('SATD_PLUGIN_NAME')) {
 			<div><?php _e('You are running plugin version', satd_get_local()); ?> <strong><?php echo SATD_VERSION; ?></strong>.</div>
 
 			<?php /* http://code.tutsplus.com/tutorials/the-complete-guide-to-the-wordpress-settings-api-part-5-tabbed-navigation-for-your-settings-page--wp-24971 */ ?>
-			<?php $active_tab = (!empty($_GET['tab']) ? $_GET['tab'] : 'settings'); ?>
+			<?php $active_tab = (isset($_GET['tab']) ? $_GET['tab'] : 'settings'); ?>
 			<h2 class="nav-tab-wrapper">
 			  <a href="?page=<?php echo satd_get_slug(); ?>&tab=settings" class="nav-tab <?php echo $active_tab == 'settings' ? 'nav-tab-active' : ''; ?>"><?php _e('Settings', satd_get_local()); ?></a>
 				<a href="?page=<?php echo satd_get_slug(); ?>&tab=support" class="nav-tab <?php echo $active_tab == 'support' ? 'nav-tab-active' : ''; ?>"><?php _e('Support', satd_get_local()); ?></a>
@@ -116,17 +113,11 @@ if (!defined('SATD_PLUGIN_NAME')) {
 						</tr>
 					<?php satd_explanationrow(__('Where to display archive description -- on Category pages, Tag pages, Author pages?', satd_get_local())); ?>
 					<?php satd_getlinebreak(); ?>
-					<tr valign="top"><th scope="row"><strong><label title="<?php _e('Allow HTML in archive description?', satd_get_local()); ?>" for="<?php echo satd_get_option(); ?>[<?php echo SATD_DEFAULT_ALLOW_HTML_NAME; ?>]"><?php _e('Allow HTML in archive description?', satd_get_local()); ?></label></strong></th>
-						<td><input type="checkbox" id="<?php echo satd_get_option(); ?>[<?php echo SATD_DEFAULT_ALLOW_HTML_NAME; ?>]" name="<?php echo satd_get_option(); ?>[<?php echo SATD_DEFAULT_ALLOW_HTML_NAME; ?>]" value="1" <?php checked('1', satd_checkifset(SATD_DEFAULT_ALLOW_HTML_NAME, SATD_DEFAULT_ALLOW_HTML, $options)); ?> /></td>
+					<tr valign="top"><th scope="row"><strong><label title="<?php _e('Enter custom title', satd_get_local()); ?>" for="<?php echo satd_get_option(); ?>[<?php echo SATD_CUSTOM_TITLE_NAME; ?>]"><?php _e('Enter custom title (category/tag only)', satd_get_local()); ?></label></strong></th>
+						<td><textarea rows="12" cols="75" id="<?php echo satd_get_option(); ?>[<?php echo SATD_CUSTOM_TITLE_NAME; ?>]" name="<?php echo satd_get_option(); ?>[<?php echo SATD_CUSTOM_TITLE_NAME; ?>]"><?php echo satd_checkifset(SATD_CUSTOM_TITLE_NAME, SATD_CUSTOM_TITLE, $options); ?></textarea></td>
 					</tr>
-					<?php satd_explanationrow(__('Check this box to allow HTML in the archive descriptions. Normally it is not allowed.', satd_get_local())); ?>
+					<?php satd_explanationrow(__('Enter custom title here. Leave blank for default which is \'This is the XXX category/tag.\'<br />Template tag <strong>%CATEGORY%</strong> is for the category name and <strong>%TAG%</strong> is for the tag name. <strong> For categories and tags only.</strong>', satd_get_local())); ?>
 					<?php satd_getlinebreak(); ?>
-					
-					<tr valign="top"><th scope="row"><strong><label title="<?php _e('Enter custom title', satd_get_local()); ?>" for="<?php echo satd_get_option(); ?>[<?php echo SATD_CUSTOM_HEADING_NAME; ?>]"><?php _e('Enter custom title', satd_get_local()); ?></label></strong></th>
-						<td><input type="text" id="<?php echo satd_get_option(); ?>[<?php echo SATD_CUSTOM_HEADING_NAME; ?>]" name="<?php echo satd_get_option(); ?>[<?php echo SATD_CUSTOM_HEADING_NAME; ?>]" value="<?php echo satd_checkifset(SATD_CUSTOM_HEADING_NAME, SATD_CUSTOM_HEADING, $options); ?>" /></td>
-					</tr>
-					<?php satd_explanationrow(__('Enter a custom title you want displayed before the archive description.', satd_get_local())); ?>
-					<?php satd_getlinebreak(); ?>					
 					<tr valign="top"><th scope="row"><strong><label title="<?php _e('Show gravatar with author description?', satd_get_local()); ?>" for="<?php echo satd_get_option(); ?>[<?php echo SATD_DEFAULT_SHOW_GRAVATAR_NAME; ?>]"><?php _e('Show gravatar with author description?', satd_get_local()); ?></label></strong></th>
 						<td><input type="checkbox" id="<?php echo satd_get_option(); ?>[<?php echo SATD_DEFAULT_SHOW_GRAVATAR_NAME; ?>]" name="<?php echo satd_get_option(); ?>[<?php echo SATD_DEFAULT_SHOW_GRAVATAR_NAME; ?>]" value="1" <?php checked('1', satd_checkifset(SATD_DEFAULT_SHOW_GRAVATAR_NAME, SATD_DEFAULT_SHOW_GRAVATAR, $options)); ?> /></td>
 					</tr>
@@ -150,7 +141,6 @@ if (!defined('SATD_PLUGIN_NAME')) {
 
 	// main function and action
 	// http://yoast.com/wordpress-archive-pages/
-	// http://docs.appthemes.com/tutorials/allow-html-in-taxonomy-descriptions/
   add_action('loop_start','satd_showarchivedescriptions');
   function satd_showarchivedescriptions() {
 		$options = satd_getpluginoptions();
@@ -167,24 +157,16 @@ if (!defined('SATD_PLUGIN_NAME')) {
 				$showoncats = $options[SATD_DEFAULT_DISPLAY_ON_CATEGORY_PAGES_NAME];
 				$showontags = $options[SATD_DEFAULT_DISPLAY_ON_TAG_PAGES_NAME];
 				$showonauthors = $options[SATD_DEFAULT_DISPLAY_ON_AUTHOR_PAGES_NAME];
-				$allowhtml = $options[SATD_DEFAULT_ALLOW_HTML_NAME];
-				$customtitle = $options[SATD_CUSTOM_HEADING_NAME];
+				$customtitle = $options[SATD_CUSTOM_TITLE_NAME];
 			} else {
 				$showoncats = satd_setupvar($showoncats, SATD_DEFAULT_DISPLAY_ON_CATEGORY_PAGES, SATD_DEFAULT_DISPLAY_ON_CATEGORY_PAGES_NAME, $options);
 				$showontags = satd_setupvar($showontags, SATD_DEFAULT_DISPLAY_ON_TAG_PAGES, SATD_DEFAULT_DISPLAY_ON_TAG_PAGES_NAME, $options);
 				$showonauthors = satd_setupvar($showonauthors, SATD_DEFAULT_DISPLAY_ON_AUTHOR_PAGES, SATD_DEFAULT_DISPLAY_ON_AUTHOR_PAGES_NAME, $options);
-				$allowhtml = satd_setupvar($allowhtml, SATD_DEFAULT_ALLOW_HTML, SATD_DEFAULT_ALLOW_HTML_NAME, $options);
-				$customtitle = satd_setupvar($customtitle, SATD_CUSTOM_HEADING, SATD_CUSTOM_HEADING_NAME, $options);
+				$customtitle = satd_setupvar($customtitle, SATD_CUSTOM_TITLE, SATD_CUSTOM_TITLE_NAME, $options);
 			}
 
 			if (is_archive()) { // we are on a Category, Tag, Author or Date archive page
 				if (!get_query_var('paged')) { // we are on the first page of a possibly paged list
-
-					// allow HTML in the description?
-					// http://premium.wpmudev.org/blog/how-to-display-your-wordpress-category-description-in-your-theme/
-					if ($allowhtml) {
-						remove_filter('pre_term_description', 'wp_filter_kses');
-					}
 
 					if (is_category() && $showoncats) {
 						$archivetype = __('category', satd_get_local());
@@ -203,7 +185,8 @@ if (!defined('SATD_PLUGIN_NAME')) {
 							$output = '<div class="satd-archive-description">';
 							$output .= '<h2 class="satd-archive-title">';
 							if ($customtitle) {
-								$output .= sanitize_text_field($customtitle);
+								$output .= $customtitle;
+								$output = str_replace(array('%CATEGORY%', '%TAG%'), ucwords(single_term_title('', false)), $output);
 							} else {
 								$output .= __('This is the ', satd_get_local()) . ucwords(single_term_title('', false)) . ' ' . $archivetype . '.';
 							}
@@ -251,7 +234,7 @@ if (!defined('SATD_PLUGIN_NAME')) {
 		global $pagenow;
 		if (current_user_can(SATD_PERMISSIONS_LEVEL)) { // user has privilege
 			if ($pagenow == 'options-general.php') { // we are on Settings menu
-				if (!empty($_GET['page'])) {
+				if (isset($_GET['page'])) {
 					if ($_GET['page'] == satd_get_slug()) { // we are on this plugin's settings page
 						$options = satd_getpluginoptions();
 						if (!empty($options)) {
@@ -271,7 +254,7 @@ if (!defined('SATD_PLUGIN_NAME')) {
 		global $pagenow;
 		if (current_user_can(SATD_PERMISSIONS_LEVEL)) { // user has privilege
 			if ($pagenow == 'options-general.php') { // we are on Settings menu
-				if (!empty($_GET['page'])) {
+				if (isset($_GET['page'])) {
 					if ($_GET['page'] == satd_get_slug()) { // we are on this plugin's settings page
 						satd_admin_styles();
 					}
@@ -343,10 +326,9 @@ if (!defined('SATD_PLUGIN_NAME')) {
 				SATD_DEFAULT_DISPLAY_ON_CATEGORY_PAGES_NAME => SATD_DEFAULT_DISPLAY_ON_CATEGORY_PAGES, 
 				SATD_DEFAULT_DISPLAY_ON_TAG_PAGES_NAME => SATD_DEFAULT_DISPLAY_ON_TAG_PAGES, 
 				SATD_DEFAULT_DISPLAY_ON_AUTHOR_PAGES_NAME => SATD_DEFAULT_DISPLAY_ON_AUTHOR_PAGES, 
-				SATD_DEFAULT_ALLOW_HTML_NAME => SATD_DEFAULT_ALLOW_HTML, 
 				SATD_DEFAULT_SHOW_GRAVATAR_NAME => SATD_DEFAULT_SHOW_GRAVATAR, 
 				SATD_DEFAULT_GRAVATAR_SIZE_NAME => SATD_DEFAULT_GRAVATAR_SIZE,
-				SATD_CUSTOM_HEADING_NAME => SATD_CUSTOM_HEADING
+				SATD_CUSTOM_TITLE_NAME => SATD_CUSTOM_TITLE
 				));
 	}
 	

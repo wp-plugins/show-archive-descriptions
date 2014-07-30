@@ -14,6 +14,13 @@ Display category, tag and author descriptions on the appropriate archive pages.
 
 Show Archive Descriptions is a plugin that displays the description for a category on that category's first archive page. It does the same for tags and author archives.
 
+Features:
+
+<ul>
+<li>Display archive descriptions (category, tag, author) with your custom text</li>
+<li>Create custom titles</li>
+</ul>
+
 == Installation ==
 
 1. Upload plugin file through the WordPress interface.
@@ -37,13 +44,19 @@ If, for example, you select category description to be displayed, and a given ca
 
 = How can I style the output? =
 
-There is some basic CSS applied to the description boxes. Look in the plugin's CSS folder for satd.css to see what CSS is being applied. Viewing the HTML source of the page is also helpful.
+There is some basic CSS applied to the description boxes. Look in the plugin's CSS folder for satd.css to see what CSS is being applied. Viewing the HTML source of the page is also helpful. Add additional CSS to your local stylesheet, and override the existing CSS if you want a different style than the current one.
 
 = I don't want the admin CSS. How do I remove it? =
 
 Add this to your functions.php:
 
 `remove_action('admin_head', 'insert_satd_admin_css');`
+
+= How do I use HTML in the descriptions? =
+
+Normally, you can't. Use this plugin to enable HTML in archive descriptions: http://wordpress.org/plugins/allow-html-in-category-descriptions/
+
+Note that you can use HTML in the custom title area of this plugin.
 
 == Screenshots ==
 
@@ -56,6 +69,8 @@ Add this to your functions.php:
 = 0.0.6 =
 - minor code optimization
 - CSS compression
+- fixed validation issue
+- option to create custom title with template tags for category or tag name
 
 = 0.0.5 =
 - permanent fix for Undefined Index issue
@@ -77,7 +92,7 @@ Add this to your functions.php:
 == Upgrade Notice ==
 
 = 0.0.6 =
-- minor code optimization; CSS compression
+- minor code optimization; CSS compression; fixed validation issue; option to create custom title with template tags for category or tag name
 
 = 0.0.5 =
 - permanent fix for Undefined Index issue; admin CSS and page updates; you can now enter custom title for archive description
