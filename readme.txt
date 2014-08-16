@@ -14,7 +14,15 @@ Display category, tag and author descriptions on the appropriate archive pages.
 
 Show Archive Descriptions is a plugin that displays the description for a category on that category's first archive page. It does the same for tags and author archives.
 
-Features:
+<h3>If you need help with this plugin</h3>
+
+If this plugin breaks your site or just flat out does not work, please go to <a href="http://wordpress.org/plugins/show-archive-descriptions/#compatibility">Compatibility</a> and click "Broken" after verifying your WordPress version and the version of the plugin you are using.
+
+Then, create a thread in the <a href="http://wordpress.org/support/plugin/show-archive-descriptions">Support</a> forum with a description of the issue. Make sure you are using the latest version of WordPress and the plugin before reporting issues, to be sure that the issue is with the current version and not with an older version where the issue may have already been fixed.
+
+<strong>Please do not use the <a href="http://wordpress.org/support/view/plugin-reviews/show-archive-descriptions">Reviews</a> section to report issues or request new features.</strong>
+
+= Features =
 
 <ul>
 <li>Display archive descriptions (category, tag, author) with your custom text</li>
@@ -66,6 +74,9 @@ Note that you can use HTML in the custom title area of this plugin.
 
 == Changelog ==
 
+= 0.0.7 =
+- updated .pot file and readme
+
 = 0.0.6 =
 - minor code optimization
 - CSS compression
@@ -90,6 +101,9 @@ Note that you can use HTML in the custom title area of this plugin.
 - created
 
 == Upgrade Notice ==
+
+= 0.0.7 =
+- updated .pot file and readme
 
 = 0.0.6 =
 - minor code optimization; CSS compression; fixed validation issue; option to create custom title with template tags for category or tag name

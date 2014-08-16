@@ -1,0 +1,213 @@
+# Copyright (C) 2014 Show Archive Descriptions
+# This file is distributed under the same license as the Show Archive Descriptions package.
+msgid ""
+msgstr ""
+"Project-Id-Version: Show Archive Descriptions 0.0.6\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/show-archive-descriptions\n"
+"POT-Creation-Date: 2014-08-14 16:41:05+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2014-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+
+#: show-archive-descriptions.php:40
+msgid "Do not access this file directly."
+msgstr ""
+
+#: show-archive-descriptions.php:81
+msgid "You do not have sufficient permission to access this page"
+msgstr ""
+
+#: show-archive-descriptions.php:85
+msgid " by "
+msgstr ""
+
+#: show-archive-descriptions.php:86
+msgid "You are running plugin version"
+msgstr ""
+
+#: show-archive-descriptions.php:91
+msgid "Settings"
+msgstr ""
+
+#: show-archive-descriptions.php:92 show-archive-descriptions.php:133
+msgid "Support"
+msgstr ""
+
+#: show-archive-descriptions.php:100
+msgid "Plugin Settings"
+msgstr ""
+
+#: show-archive-descriptions.php:102 show-archive-descriptions.php:105
+msgid "Is plugin enabled? Uncheck this to turn it off temporarily."
+msgstr ""
+
+#: show-archive-descriptions.php:102
+msgid "Plugin enabled?"
+msgstr ""
+
+#: show-archive-descriptions.php:107
+msgid "Where do you want to show archive descriptions"
+msgstr ""
+
+#: show-archive-descriptions.php:109
+msgid "Category Pages"
+msgstr ""
+
+#: show-archive-descriptions.php:110
+msgid "Tag Pages"
+msgstr ""
+
+#: show-archive-descriptions.php:111
+msgid "Author Pages"
+msgstr ""
+
+#: show-archive-descriptions.php:114
+msgid ""
+"Where to display archive description -- on Category pages, Tag pages, Author "
+"pages?"
+msgstr ""
+
+#: show-archive-descriptions.php:116
+msgid "Enter custom title"
+msgstr ""
+
+#: show-archive-descriptions.php:116
+msgid "Enter custom title (category/tag only)"
+msgstr ""
+
+#: show-archive-descriptions.php:119
+msgid ""
+"Enter custom title here. Leave blank for default which is 'This is the XXX "
+"category/tag.'<br />Template tag <strong>%CATEGORY%</strong> is for the "
+"category name and <strong>%TAG%</strong> is for the tag name. <strong> For "
+"categories and tags only.</strong>"
+msgstr ""
+
+#: show-archive-descriptions.php:121
+msgid "Show gravatar with author description?"
+msgstr ""
+
+#: show-archive-descriptions.php:124
+msgid "Show author's gravatar with author description?"
+msgstr ""
+
+#: show-archive-descriptions.php:126
+msgid "Gravatar size"
+msgstr ""
+
+#: show-archive-descriptions.php:129
+msgid "Gravatar size (in pixels), max 512"
+msgstr ""
+
+#: show-archive-descriptions.php:172
+msgid "category"
+msgstr ""
+
+#: show-archive-descriptions.php:175
+msgid "tag"
+msgstr ""
+
+#: show-archive-descriptions.php:191
+msgid "This is the "
+msgstr ""
+
+#: show-archive-descriptions.php:197
+msgid "<!-- %1$s: No description is available for the current %2$s."
+msgstr ""
+
+#: show-archive-descriptions.php:216
+msgid "About "
+msgstr ""
+
+#: show-archive-descriptions.php:221
+msgid "<!-- %s: No description is available for the current author."
+msgstr ""
+
+#: show-archive-descriptions.php:243
+msgid "is currently disabled."
+msgstr ""
+
+#: show-archive-descriptions.php:278
+msgid "<a href=\"http://wordpress.org/support/plugin/%s\">Support</a>"
+msgstr ""
+
+#: show-archive-descriptions.php:279 show-archive-descriptions.php:358
+msgid "<a href=\"http://wordpress.org/extend/plugins/%s/\">Documentation</a>"
+msgstr ""
+
+#: show-archive-descriptions.php:280
+msgid "<a href=\"http://wordpress.org/plugins/%s/faq/\">FAQ</a>"
+msgstr ""
+
+#: show-archive-descriptions.php:342
+msgid "<a href=\"options-general.php?page=%s\">Settings</a>"
+msgstr ""
+
+#: show-archive-descriptions.php:356
+msgid "Do you need help with this plugin? Check out the following resources:"
+msgstr ""
+
+#: show-archive-descriptions.php:359
+msgid "<a href=\"http://wordpress.org/plugins/%s/faq/\">FAQ</a><br />"
+msgstr ""
+
+#: show-archive-descriptions.php:360
+msgid ""
+"<a href=\"http://wordpress.org/support/plugin/%s\">Support Forum</a><br />"
+msgstr ""
+
+#: show-archive-descriptions.php:361
+msgid ""
+"<a href=\"http://www.jimmyscode.com/wordpress/%s\">Plugin Homepage / Demo</"
+"a><br />"
+msgstr ""
+
+#: show-archive-descriptions.php:362
+msgid ""
+"<a href=\"http://wordpress.org/extend/plugins/%s/developers/\">Development</"
+"a><br />"
+msgstr ""
+
+#: show-archive-descriptions.php:363
+msgid ""
+"<a href=\"http://wordpress.org/plugins/%s/changelog/\">Changelog</a><br />"
+msgstr ""
+
+#: show-archive-descriptions.php:366
+msgid ""
+"If you like this plugin, please <a href=\"http://wordpress.org/support/view/"
+"plugin-reviews/%s/\">rate it on WordPress.org</a>"
+msgstr ""
+
+#: show-archive-descriptions.php:367
+msgid ""
+" and click the <a href=\"http://wordpress.org/plugins/%s/#compatibility"
+"\">Works</a> button. "
+msgstr ""
+
+#: show-archive-descriptions.php:369
+msgid "Your donations encourage further development and support. "
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+msgid "Show Archive Descriptions"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid "http://www.jimmyscode.com/wordpress/show-category-tag-descriptions/"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid "Show category, tag and author descriptions on your archive pages."
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "Jimmy Pe&ntilde;a"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "http://www.jimmyscode.com/"
+msgstr ""
