@@ -3,7 +3,7 @@
 Plugin Name: Show Archive Descriptions
 Plugin URI: http://www.jimmyscode.com/wordpress/show-category-tag-descriptions/
 Description: Show category, tag and author descriptions on your archive pages.
-Version: 0.0.7
+Version: 0.0.8
 Author: Jimmy Pe&ntilde;a
 Author URI: http://www.jimmyscode.com/
 License: GPLv2 or later
@@ -11,7 +11,7 @@ License: GPLv2 or later
 if (!defined('SATD_PLUGIN_NAME')) {
 	define('SATD_PLUGIN_NAME', 'Show Archive Descriptions');
 	// plugin constants
-	define('SATD_VERSION', '0.0.7');
+	define('SATD_VERSION', '0.0.8');
 	define('SATD_SLUG', 'show-archive-descriptions');
 	define('SATD_LOCAL', 'satd');
 	define('SATD_OPTION', 'satd');
@@ -112,6 +112,7 @@ if (!defined('SATD_PLUGIN_NAME')) {
 						</td>
 						</tr>
 					<?php satd_explanationrow(__('Where to display archive description -- on Category pages, Tag pages, Author pages?', satd_get_local())); ?>
+					<?php satd_explanationrow(__('Remember to fill in descriptions for author, categories and tags otherwise they will not display!', satd_get_local())); ?>
 					<?php satd_getlinebreak(); ?>
 					<tr valign="top"><th scope="row"><strong><label title="<?php _e('Enter custom title', satd_get_local()); ?>" for="<?php echo satd_get_option(); ?>[<?php echo SATD_CUSTOM_TITLE_NAME; ?>]"><?php _e('Enter custom title (category/tag only)', satd_get_local()); ?></label></strong></th>
 						<td><textarea rows="12" cols="75" id="<?php echo satd_get_option(); ?>[<?php echo SATD_CUSTOM_TITLE_NAME; ?>]" name="<?php echo satd_get_option(); ?>[<?php echo SATD_CUSTOM_TITLE_NAME; ?>]"><?php echo satd_checkifset(SATD_CUSTOM_TITLE_NAME, SATD_CUSTOM_TITLE, $options); ?></textarea></td>
@@ -206,8 +207,8 @@ if (!defined('SATD_PLUGIN_NAME')) {
 							$showgravatar = $options[SATD_DEFAULT_SHOW_GRAVATAR_NAME];
 							$authorname = get_the_author_meta('display_name');
 							
+							$output = '<div class="satd-archive-description">';
 							if ($showgravatar) {
-								$output = '<div class="satd-archive-description">';
 								$output .= '<span class="satd-gravatar">';
 								$output .= get_avatar(get_the_author_meta('user_email'), $options[SATD_DEFAULT_GRAVATAR_SIZE_NAME], '', $authorname);
 								$output .= '</span>';
@@ -216,7 +217,9 @@ if (!defined('SATD_PLUGIN_NAME')) {
 							$output .= __('About ', satd_get_local()) . $authorname;
 							$output .= '</span>';
 							$output .= '<p class="satd-author-desc">' . $authordesc . '</p>';
+							
 							$output .= '</div>';
+							
 						} else {
 							$output = sprintf( __('<!-- %s: No description is available for the current author.', satd_get_local()), SATD_PLUGIN_NAME) . ' -->';
 						}

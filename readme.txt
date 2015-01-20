@@ -74,6 +74,10 @@ Note that you can use HTML in the custom title area of this plugin.
 
 == Changelog ==
 
+= 0.0.8 =
+- confirmed compatibility with WordPress 4.1
+- fixed minor bug when toggling gravatars
+
 = 0.0.7 =
 - updated .pot file and readme
 
@@ -101,6 +105,9 @@ Note that you can use HTML in the custom title area of this plugin.
 - created
 
 == Upgrade Notice ==
+
+= 0.0.8 =
+- confirmed compatibility with WordPress 4.1, fixed minor bug when toggling gravatars
 
 = 0.0.7 =
 - updated .pot file and readme
